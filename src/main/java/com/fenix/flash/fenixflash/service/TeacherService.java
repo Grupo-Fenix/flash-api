@@ -2,7 +2,6 @@ package com.fenix.flash.fenixflash.service;
 
 import com.fenix.flash.fenixflash.model.Teacher;
 import com.fenix.flash.fenixflash.repository.TeacherRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +10,9 @@ import java.util.Optional;
 @Service
 public class TeacherService {
     private final TeacherRepository repository;
-    private final PasswordEncoder encoder;
 
-    public TeacherService(TeacherRepository repository, PasswordEncoder encoder) {
+    public TeacherService(TeacherRepository repository) {
         this.repository = repository;
-        this.encoder = encoder;
     }
 
     public Optional<Teacher> findByUsername(String username) {

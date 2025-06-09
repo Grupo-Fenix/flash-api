@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -34,7 +35,7 @@ public class FileUploadService {
     public String store(MultipartFile file, String subDirectory) {
         if (file == null || file.isEmpty()) return null;
 
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try {
             if (filename.contains("..")) throw new RuntimeException("Sequência de caminho inválida");
 
@@ -43,7 +44,7 @@ public class FileUploadService {
             if (dotIndex > 0) {
                 fileExtension = filename.substring(dotIndex);
             }
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+            String uniqueFileName = UUID.randomUUID() + fileExtension;
 
             Path targetLocation = location;
             if (subDirectory != null && !subDirectory.isEmpty()) {

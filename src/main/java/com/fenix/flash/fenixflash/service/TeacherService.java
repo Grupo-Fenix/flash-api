@@ -27,7 +27,6 @@ public class TeacherService {
     }
 
     public void upsert(Teacher teacher) {
-        teacher.setPassword(encoder.encode(teacher.getPassword()));
         repository.save(teacher);
     }
 

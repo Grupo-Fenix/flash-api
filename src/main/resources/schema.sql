@@ -35,3 +35,19 @@ create table professor
     constraint professor_rede_social_unique
         unique (rede_social_prof)
 );
+
+
+create sequence aluno_id_seq;
+
+create table aluno
+(
+    id_aluno        bigint                 not null default nextval('aluno_id_seq'),
+    nome_aluno      character varying(21)  not null,
+    sobrenome_aluno character varying(21)  not null,
+    email_aluno     character varying(75)  not null,
+    senha_aluno     character varying(255) not null,
+    constraint aluno_pk
+        primary key (id_aluno),
+    constraint aluno_email_unique
+        unique (email_aluno)
+);

@@ -8,9 +8,14 @@ spring:
     password: c0mpl3xpb@369
     driver-class-name: org.postgresql.Driver
 
+
   servlet:
     multipart:
       max-file-size: 5MB
+
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 file:
   upload:

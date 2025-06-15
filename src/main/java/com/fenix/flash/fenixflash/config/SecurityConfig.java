@@ -1,6 +1,7 @@
 package com.fenix.flash.fenixflash.config;
 
 import com.fenix.flash.fenixflash.jwt.JwtAuthenticationFilter;
+import com.fenix.flash.fenixflash.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,12 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -26,21 +24,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final UserRepository userRepository;
+
+    public SecurityConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails hangalito = User.builder()
-                .username("hangalito")
-                .password(passwordEncoder().encode("c0mpl3xpb@369"))
-                .roles("ADMIN", "ROOT")
-                .authorities("CREATE", "READ", "UPDATE", "DELETE")
-                .build();
-        UserDetails opejotta = User.builder()
-                .username("operjotta")
-                .password(passwordEncoder().encode("root"))
-                .roles("ADMIN")
-                .authorities("CREATE", "READ")
-                .build();
-        return new InMemoryUserDetailsManager(hangalito, opejotta);
+        return username -> userRepository.findByUsername(username)
+                                         .or(() -> userRepository.findByEmail(username))
+                                         .orElseThrow();
     }
 
     @Bean
@@ -63,15 +57,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("teachers/delete/**").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(request -> request
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

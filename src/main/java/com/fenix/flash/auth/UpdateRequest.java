@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.auth;
+package com.fenix.flash.auth;
 
 public record UpdateRequest(
         String username,

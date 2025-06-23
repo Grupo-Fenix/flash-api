@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.auth;
+package com.fenix.flash.auth;
 
 public sealed interface AuthResponse {
     record Success(String token) implements AuthResponse {

@@ -1,7 +1,7 @@
-package com.fenix.flash.fenixflash.auth;
+package com.fenix.flash.auth;
 
-import com.fenix.flash.fenixflash.model.User;
-import com.fenix.flash.fenixflash.model.UserType;
+import com.fenix.flash.model.User;
+import com.fenix.flash.model.UserType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

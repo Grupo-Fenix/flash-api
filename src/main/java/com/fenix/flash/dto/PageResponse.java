@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.dto;
+package com.fenix.flash.dto;
 
 import org.springframework.data.domain.Page;
 

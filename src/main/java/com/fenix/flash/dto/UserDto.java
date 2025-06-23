@@ -1,7 +1,7 @@
-package com.fenix.flash.fenixflash.dto;
+package com.fenix.flash.dto;
 
-import com.fenix.flash.fenixflash.model.User;
-import com.fenix.flash.fenixflash.model.UserType;
+import com.fenix.flash.model.User;
+import com.fenix.flash.model.UserType;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

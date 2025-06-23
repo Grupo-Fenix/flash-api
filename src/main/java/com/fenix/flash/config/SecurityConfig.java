@@ -1,7 +1,7 @@
-package com.fenix.flash.fenixflash.config;
+package com.fenix.flash.config;
 
-import com.fenix.flash.fenixflash.auth.jwt.JwtAuthenticationFilter;
-import com.fenix.flash.fenixflash.repository.UserRepository;
+import com.fenix.flash.auth.jwt.JwtAuthenticationFilter;
+import com.fenix.flash.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

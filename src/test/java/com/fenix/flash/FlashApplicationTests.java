@@ -1,10 +1,10 @@
-package com.fenix.flash.fenixflash;
+package com.fenix.flash;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FenixFlashApplicationTests {
+class FlashApplicationTests {
 
     @Test
     void contextLoads() {

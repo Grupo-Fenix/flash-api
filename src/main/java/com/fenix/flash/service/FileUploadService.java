@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.service;
+package com.fenix.flash.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

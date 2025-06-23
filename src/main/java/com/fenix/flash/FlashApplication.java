@@ -1,13 +1,13 @@
-package com.fenix.flash.fenixflash;
+package com.fenix.flash;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FenixFlashApplication {
+public class FlashApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FenixFlashApplication.class, args);
+        SpringApplication.run(FlashApplication.class, args);
     }
 
 }

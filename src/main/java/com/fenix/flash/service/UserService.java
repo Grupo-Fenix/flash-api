@@ -1,18 +1,18 @@
-package com.fenix.flash.fenixflash.service;
+package com.fenix.flash.service;
 
-import com.fenix.flash.fenixflash.auth.RegisterRequest;
-import com.fenix.flash.fenixflash.auth.UpdateRequest;
-import com.fenix.flash.fenixflash.dto.PageResponse;
-import com.fenix.flash.fenixflash.dto.UserDto;
-import com.fenix.flash.fenixflash.model.User;
-import com.fenix.flash.fenixflash.repository.UserRepository;
+import com.fenix.flash.auth.RegisterRequest;
+import com.fenix.flash.auth.UpdateRequest;
+import com.fenix.flash.dto.PageResponse;
+import com.fenix.flash.dto.UserDto;
+import com.fenix.flash.model.User;
+import com.fenix.flash.repository.UserRepository;
 import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.fenix.flash.fenixflash.util.FlashConstants.*;
+import static com.fenix.flash.util.FlashConstants.*;
 
 @Service
 public class UserService {

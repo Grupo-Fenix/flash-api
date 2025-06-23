@@ -1,9 +1,9 @@
-package com.fenix.flash.fenixflash.auth;
+package com.fenix.flash.auth;
 
-import com.fenix.flash.fenixflash.auth.AuthResponse.Error;
-import com.fenix.flash.fenixflash.auth.AuthResponse.Success;
-import com.fenix.flash.fenixflash.auth.jwt.JwtService;
-import com.fenix.flash.fenixflash.service.UserService;
+import com.fenix.flash.auth.AuthResponse.Error;
+import com.fenix.flash.auth.AuthResponse.Success;
+import com.fenix.flash.auth.jwt.JwtService;
+import com.fenix.flash.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.stream.Collectors;
 
-import static com.fenix.flash.fenixflash.util.FlashConstants.RESOURCE_DOES_NOT_EXISTS;
-import static com.fenix.flash.fenixflash.util.FlashConstants.USERNAME_EXISTS;
+import static com.fenix.flash.util.FlashConstants.RESOURCE_DOES_NOT_EXISTS;
+import static com.fenix.flash.util.FlashConstants.USERNAME_EXISTS;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ProblemDetail.forStatusAndDetail;
 import static org.springframework.http.ResponseEntity.*;

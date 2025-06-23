@@ -1,6 +1,6 @@
-package com.fenix.flash.fenixflash.repository;
+package com.fenix.flash.repository;
 
-import com.fenix.flash.fenixflash.model.User;
+import com.fenix.flash.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.auth.jwt;
+package com.fenix.flash.auth.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

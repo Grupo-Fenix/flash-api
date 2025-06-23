@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.util;
+package com.fenix.flash.util;
 
 public interface FlashConstants {
     int RESOURCE_DOES_NOT_EXISTS = -1;

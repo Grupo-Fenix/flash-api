@@ -15,12 +15,14 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.stream.Collectors;
 
+import static com.fenix.flash.fenixflash.util.FlashConstants.RESOURCE_DOES_NOT_EXISTS;
+import static com.fenix.flash.fenixflash.util.FlashConstants.USERNAME_EXISTS;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ProblemDetail.forStatusAndDetail;
-import static org.springframework.http.ResponseEntity.badRequest;
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -77,15 +79,15 @@ public class AuthController {
                                .map(ObjectError::getDefaultMessage)
                                .collect(Collectors.joining(". "));
             detail = forStatusAndDetail(BAD_REQUEST, msg);
-            return ResponseEntity.of(detail).build();
+            return of(detail).build();
         }
 
         if (userService.usernameExists(request.username())) {
             detail = forStatusAndDetail(BAD_REQUEST, "Este nome de utilizador já existe");
-            return ResponseEntity.of(detail).build();
+            return of(detail).build();
         } else if (userService.emailExists(request.email())) {
             detail = forStatusAndDetail(BAD_REQUEST, "Este email já existe");
-            return ResponseEntity.of(detail).build();
+            return of(detail).build();
         }
 
         userService.register(request);
@@ -114,6 +116,23 @@ public class AuthController {
             msg = "Este nome de utilizador está disponível";
         }
         return ok(new EmailUsernameVerification(exists, msg));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProfile(Principal principal, @RequestBody UpdateRequest request) {
+        var result = userService.update(principal.getName(), request);
+        if (result == RESOURCE_DOES_NOT_EXISTS) {
+            ProblemDetail detail = forStatusAndDetail(BAD_REQUEST, "Erro inesperado ao atualizar perfil");
+            return of(detail).build();
+        }
+
+        if (result == USERNAME_EXISTS) {
+            ProblemDetail detail = forStatusAndDetail(
+                    BAD_REQUEST, "O nome de utilizador que tentou actualizar já está existe");
+            return of(detail).build();
+        }
+
+        return ok().build();
     }
 
 }

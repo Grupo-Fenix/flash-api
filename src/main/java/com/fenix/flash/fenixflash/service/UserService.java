@@ -1,15 +1,12 @@
 package com.fenix.flash.fenixflash.service;
 
-import com.fenix.flash.fenixflash.dto.PageResponse;
-import com.fenix.flash.fenixflash.dto.UserDto;
 import com.fenix.flash.fenixflash.auth.RegisterRequest;
 import com.fenix.flash.fenixflash.auth.UpdateRequest;
+import com.fenix.flash.fenixflash.dto.PageResponse;
+import com.fenix.flash.fenixflash.dto.UserDto;
 import com.fenix.flash.fenixflash.model.User;
 import com.fenix.flash.fenixflash.repository.UserRepository;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,26 +59,20 @@ public class UserService {
         repository.save(user);
     }
 
-    public int update(UpdateRequest request) {
-        Optional<User> optional = findById(request.id());
-        if (optional.isEmpty()) return RESOURCE_DOES_NOT_EXISTS;
+    public int update(String username, UpdateRequest request) {
+        if (repository.existsByUsernameIgnoreCase(request.username())) {
+            return USERNAME_EXISTS;
+        }
 
+        Optional<User> optional = repository.findByUsername(username)
+                                            .or(() -> repository.findByEmail(username));
+        if (optional.isEmpty()) {
+            return RESOURCE_DOES_NOT_EXISTS;
+        }
         User user = optional.get();
 
         if (request.username() != null && !request.username().isBlank()) {
-            if (usernameExists(request.username())) {
-                return USERNAME_EXISTS;
-            } else {
-                user.setUsername(request.username());
-            }
-        }
-
-        if (request.email() != null && !request.email().isBlank()) {
-            if (emailExists(request.email())) {
-                return EMAIL_EXISTS;
-            } else {
-                user.setEmail(request.email());
-            }
+            user.setUsername(request.username());
         }
 
         if (request.senha() != null && !request.senha().isBlank()) {
@@ -115,7 +106,6 @@ public class UserService {
         repository.save(user);
         return SUCCESS;
     }
-
 
     public void delete(User user) {
         if (repository.exists(Example.of(user))) {

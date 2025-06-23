@@ -2,7 +2,7 @@ package com.fenix.flash.fenixflash.auth;
 
 import com.fenix.flash.fenixflash.auth.AuthResponse.Error;
 import com.fenix.flash.fenixflash.auth.AuthResponse.Success;
-import com.fenix.flash.fenixflash.jwt.JwtService;
+import com.fenix.flash.fenixflash.auth.jwt.JwtService;
 import com.fenix.flash.fenixflash.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;

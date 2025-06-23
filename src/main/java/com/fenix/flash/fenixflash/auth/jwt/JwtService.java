@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.jwt;
+package com.fenix.flash.fenixflash.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

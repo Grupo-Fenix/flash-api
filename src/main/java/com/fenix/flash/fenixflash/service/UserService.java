@@ -2,8 +2,8 @@ package com.fenix.flash.fenixflash.service;
 
 import com.fenix.flash.fenixflash.dto.PageResponse;
 import com.fenix.flash.fenixflash.dto.UserDto;
-import com.fenix.flash.fenixflash.dto.UserRegistration;
-import com.fenix.flash.fenixflash.dto.UserUpdateRequest;
+import com.fenix.flash.fenixflash.auth.RegisterRequest;
+import com.fenix.flash.fenixflash.auth.UpdateRequest;
 import com.fenix.flash.fenixflash.model.User;
 import com.fenix.flash.fenixflash.repository.UserRepository;
 import org.springframework.data.domain.Example;
@@ -56,13 +56,13 @@ public class UserService {
         return repository.existsByUsernameIgnoreCase(username);
     }
 
-    public void register(UserRegistration request) {
+    public void register(RegisterRequest request) {
         User user = request.toUser();
         user.setPassword(encoder.encode(request.senha()));
         repository.save(user);
     }
 
-    public int update(UserUpdateRequest request) {
+    public int update(UpdateRequest request) {
         Optional<User> optional = findById(request.id());
         if (optional.isEmpty()) return RESOURCE_DOES_NOT_EXISTS;
 

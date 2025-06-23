@@ -1,4 +1,4 @@
-package com.fenix.flash.fenixflash.dto;
+package com.fenix.flash.fenixflash.auth;
 
 import com.fenix.flash.fenixflash.model.User;
 import com.fenix.flash.fenixflash.model.UserType;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 import static jakarta.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
-public record UserRegistration(
+public record RegisterRequest(
         @NotBlank(message = "O nome de utilizador é obrigatório")
         @Size(max = 15, message = "O nome de utilizador deve conter apenas 15 caracteres")
         String username,
@@ -24,6 +24,7 @@ public record UserRegistration(
         @Pattern(regexp = "(ADMINISTRADOR|ALUNO|GERENTE|PROFESSOR)", message = "Tipo de utilizador inválido", flags = {CASE_INSENSITIVE})
         String tipo
 ) {
+    //<editor-fold desc="Mapper function">
     public User toUser() {
         User user = new User();
         user.setUsername(username);
@@ -33,4 +34,5 @@ public record UserRegistration(
         user.setDeleted(false);
         return user;
     }
+    //</editor-fold>
 }

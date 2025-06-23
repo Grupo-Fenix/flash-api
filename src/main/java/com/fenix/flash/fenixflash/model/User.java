@@ -125,7 +125,10 @@ public class User implements UserDetails {
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof User user)) return false;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && type == user.type && Objects.equals(deleted, user.deleted) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(
+                email, user.email) && Objects.equals(password, user.password) && type == user.type && Objects.equals(
+                deleted, user.deleted) && Objects.equals(createdAt, user.createdAt) && Objects.equals(
+                updatedAt, user.updatedAt);
     }
 
     @Override
@@ -148,6 +151,7 @@ public class User implements UserDetails {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Lifecycle methods">
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
@@ -159,5 +163,6 @@ public class User implements UserDetails {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    //</editor-fold>
 
 }

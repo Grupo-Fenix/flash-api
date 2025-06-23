@@ -1,6 +1,6 @@
 package com.fenix.flash.fenixflash.auth;
 
-public record AuthRequest(
+public record LoginRequest(
         String email,
         String password
 ) {

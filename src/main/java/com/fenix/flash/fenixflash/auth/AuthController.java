@@ -1,7 +1,7 @@
 package com.fenix.flash.fenixflash.auth;
 
+import com.fenix.flash.fenixflash.auth.AuthResponse.Error;
 import com.fenix.flash.fenixflash.auth.AuthResponse.Success;
-import com.fenix.flash.fenixflash.dto.UserRegistration;
 import com.fenix.flash.fenixflash.jwt.JwtService;
 import com.fenix.flash.fenixflash.service.UserService;
 import jakarta.validation.Valid;
@@ -9,15 +9,11 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -47,9 +43,9 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(
-            @RequestBody AuthRequest request
+            @RequestBody LoginRequest request
     ) {
         UserDetails userDetails;
         try {
@@ -58,17 +54,45 @@ public class AuthController {
             return badRequest().body(new AuthResponse.Error(UNAUTHORIZED.value(), e.getMessage()));
         }
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()
+                    )
+            );
+        } catch (AuthenticationException ex) {
+            return badRequest().body(new Error(BAD_REQUEST.value(), "A palavra-passe introduzida não está correta"));
+        }
+
         String jwtToken = jwtService.generateToken(userDetails);
         return ok(new Success(jwtToken));
     }
 
-    @PostMapping("/verify-email")
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request, Errors errors) {
+        ProblemDetail detail;
+        if (errors.hasErrors()) {
+            String msg = errors.getAllErrors().stream()
+                               .map(ObjectError::getDefaultMessage)
+                               .collect(Collectors.joining(". "));
+            detail = forStatusAndDetail(BAD_REQUEST, msg);
+            return ResponseEntity.of(detail).build();
+        }
+
+        if (userService.usernameExists(request.username())) {
+            detail = forStatusAndDetail(BAD_REQUEST, "Este nome de utilizador já existe");
+            return ResponseEntity.of(detail).build();
+        } else if (userService.emailExists(request.email())) {
+            detail = forStatusAndDetail(BAD_REQUEST, "Este email já existe");
+            return ResponseEntity.of(detail).build();
+        }
+
+        userService.register(request);
+        return ResponseEntity.status(CREATED).build();
+    }
+
+    @PostMapping("/email-check")
     public ResponseEntity<EmailUsernameVerification> verifyEmail(@RequestBody String email) {
         boolean exists = userService.emailExists(email);
         String msg;
@@ -80,7 +104,7 @@ public class AuthController {
         return ok(new EmailUsernameVerification(exists, msg));
     }
 
-    @PostMapping("/verify-username")
+    @PostMapping("/username-check")
     public ResponseEntity<EmailUsernameVerification> verifyUsername(@RequestBody String username) {
         boolean exists = userService.usernameExists(username);
         String msg;
@@ -90,19 +114,6 @@ public class AuthController {
             msg = "Este nome de utilizador está disponível";
         }
         return ok(new EmailUsernameVerification(exists, msg));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody UserRegistration request, Errors errors) {
-        if (errors.hasErrors()) {
-            String msg = errors.getAllErrors().stream()
-                               .map(ObjectError::getDefaultMessage)
-                               .collect(Collectors.joining(". "));
-            ProblemDetail detail = forStatusAndDetail(BAD_REQUEST, msg);
-            return ResponseEntity.of(detail).build();
-        }
-        userService.register(request);
-        return ResponseEntity.status(CREATED).build();
     }
 
 }
